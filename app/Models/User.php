@@ -41,7 +41,17 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
+    }
+
+    public function ads(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Ad::class);
+    }
+
+    public function bookmarkedAds()
+    {
+        return $this->belongsToMany(Ad::class, 'bookmarks')->withTimestamps();
     }
 }
