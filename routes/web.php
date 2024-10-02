@@ -1,14 +1,22 @@
 <?php
-
+use App\Models\Ad;
+use App\Actions\GetAads;
 use App\Http\Controllers\AdController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [AdController::class, 'index']);
 
-Route::resource('ads', AdController::class);
+Route::get('/', \App\Actions\GetAads::class);
+Route::get('ads/create',[App\Http\Controllers\AdController::class,'create']);
+Route::get('/ads/{id}' ,[AdController::class,'show']);
+Route::resource('ads', \App\Http\Controllers\AdController::class);
+Route::get('/search',[\App\Http\Controllers\AdController::class ,'find']);
+Route::get('branches',[\App\Http\Controllers\BranchController::class,'index' ]);
+Route::get('/contact',[\App\Http\Controllers\AdController::class,'contact']);
+Route::get('/branch/{id}',[\App\Http\Controllers\BranchController::class,'branch' ]);
 
-Route::post('/ads/{id}/bookmark', [\App\Http\Controllers\UserController::class, 'toggleBookmark']);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -21,23 +29,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-
-/**
- * TODO Dashboard:
- *  1. Add link to home page
- *  2. Add icons to menu items
- *  3. Make fields sortable:
- *      - price, rooms, gender, status, branch
- *  4. Hide owner and description from AdResource index
- *  5. Display uploaded image via relationship (show only related images count)
- *  6. Display ads attached to branches
- *  7. Display ads attached to users
- *  8. Translate + Create button on index pages
- *  9. Add Bookmarked ads resource and all related stuff
- *
- * TODO home page:
- *  1. Add icons
- *  2. Show corresponding data on index and detail pages (branch, gender, rooms)
- *  3. Implement bookmarking feature (use many to many relationship)
- */

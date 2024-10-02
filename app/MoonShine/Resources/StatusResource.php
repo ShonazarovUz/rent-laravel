@@ -23,8 +23,6 @@ class StatusResource extends ModelResource
 
     protected string $title = 'Statuses';
 
-    public string $column = 'name';
-
     /**
      * @return list<MoonShineComponent|Field>
      */
@@ -33,13 +31,15 @@ class StatusResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable(),
-                Text::make('Name'),
+                Text::make("name")->sortable(),
+                Text::make("created_at")->sortable(),
+                Text::make("updated_at")->sortable(),
             ]),
         ];
     }
 
     /**
-     * @param  Status  $item
+     * @param Status $item
      *
      * @return array<string, string[]|string>
      * @see https://laravel.com/docs/validation#available-validation-rules

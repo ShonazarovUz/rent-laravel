@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\MoonShine\Resources\AdImageResource;
+
+use App\Models\Ad;
 use App\MoonShine\Resources\AdResource;
-use App\MoonShine\Resources\BranchResource;
+use App\MoonShine\Resources\BranchesResource;
+
 use App\MoonShine\Resources\StatusResource;
 use App\MoonShine\Resources\UserResource;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
+use MoonShine\MoonShine;
 use MoonShine\Menu\MenuGroup;
 use MoonShine\Menu\MenuItem;
 use MoonShine\Resources\MoonShineUserResource;
@@ -26,10 +29,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
      */
     protected function resources(): array
     {
-        return [
-            new StatusResource(),
-            new AdImageResource()
-        ];
+        return [];
     }
 
     /**
@@ -46,10 +46,6 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
     protected function menu(): array
     {
         return [
-            MenuItem::make("Asosiy", '/')->icon('heroicons.outline.home'),
-            MenuItem::make("E'lonlar", new AdResource())->icon('heroicons.outline.newspaper'),
-            MenuItem::make('Filiallar', new BranchResource())->icon('heroicons.outline.map-pin'),
-            MenuItem::make('Foydalanuvchilar', new UserResource())->icon('heroicons.outline.users'),
             MenuGroup::make(static fn() => __('moonshine::ui.resource.system'), [
                 MenuItem::make(
                     static fn() => __('moonshine::ui.resource.admins_title'),
@@ -60,7 +56,14 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                     new MoonShineUserRoleResource()
                 ),
             ]),
+            MenuItem::make('Home','/')->icon('heroicons.outline.home'),
+            MenuItem::make("E'lonlar", new AdResource())->icon('heroicons.outline.squares-2x2'),
+            MenuItem::make("Branch",new BranchesResource()),
+            MenuItem::make("Status",new StatusResource()),
+            MenuItem::make("User",new UserResource())->icon('heroicons.outline.users'),
+
         ];
+
     }
 
     /**

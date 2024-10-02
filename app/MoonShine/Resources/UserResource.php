@@ -6,12 +6,12 @@ namespace App\MoonShine\Resources;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use App\MoonShine\Pages\User\UserIndexPage;
-use App\MoonShine\Pages\User\UserFormPage;
-use App\MoonShine\Pages\User\UserDetailPage;
 
+use MoonShine\Fields\Text;
 use MoonShine\Resources\ModelResource;
-use MoonShine\Pages\Page;
+use MoonShine\Fields\ID;
+use MoonShine\Fields\Field;
+use MoonShine\Components\MoonShineComponent;
 
 /**
  * @extends ModelResource<User>
@@ -20,28 +20,45 @@ class UserResource extends ModelResource
 {
     protected string $model = User::class;
 
-    protected string $title = 'Foydalanuvchilar';
-
-    public string $column = 'name';
+    protected string $title = 'Users';
 
     /**
-     * @return list<Page>
+     * @return list<Field>
      */
-    public function pages(): array
+    public function indexFields(): array
     {
         return [
-            UserIndexPage::make($this->title()),
-            UserFormPage::make(
-                $this->getItemID()
-                    ? __('moonshine::ui.edit')
-                    : __('moonshine::ui.add')
-            ),
-            UserDetailPage::make(__('moonshine::ui.show')),
+            ID::make()->sortable(),
+            Text::make("name")->sortable()
         ];
     }
 
     /**
-     * @param  User  $item
+     * @return list<MoonShineComponent|Field>
+     */
+    public function formFields(): array
+    {
+        return [
+            ID::make()->sortable(),
+            Text::make("name")->sortable(),
+            Text::make('email')->sortable()
+        ];
+    }
+
+    /**
+     * @return list<Field>
+     */
+    public function detailFields(): array
+    {
+        return [
+            ID::make()->sortable(),
+            Text::make("name")->sortable()
+
+        ];
+    }
+
+    /**
+     * @param User $item
      *
      * @return array<string, string[]|string>
      * @see https://laravel.com/docs/validation#available-validation-rules

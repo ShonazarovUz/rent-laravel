@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 
 use App\Enums\Gender;
+use App\Models\Branch;
+use Faker\Core\Number;
+use Faker\Provider\Text;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Ad;
 
-use MoonShine\ActionButtons\ActionButton;
 use MoonShine\Fields\Enum;
-use MoonShine\Fields\Number;
 use MoonShine\Fields\Relationships\BelongsTo;
-use MoonShine\Fields\Relationships\HasMany;
-use MoonShine\Fields\Text;
+use MoonShine\Fields\Textarea;
 use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
@@ -26,10 +26,10 @@ use MoonShine\Components\MoonShineComponent;
 class AdResource extends ModelResource
 {
     protected string $model = Ad::class;
+    protected string $resourceType = Branch::class;
+
 
     protected string $title = "E'lonlar";
-
-    public string $column = 'title';
 
     /**
      * @return list<MoonShineComponent|Field>
@@ -39,27 +39,23 @@ class AdResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable(),
-                Text::make("Sarlavha", 'title'),
-                Text::make("Tarif", 'description')->hideOnIndex(),
-                Number::make("Narxi", 'price')->sortable(),
-                Number::make("Xonalar", 'rooms')->sortable(),
-                Text::make("Manzil", 'address')->hideOnIndex(),
-                Enum::make('Jins', 'gender')->attach(Gender::class)->sortable(),
-                BelongsTo::make(label: 'Filial', relationName: 'branch', resource: new BranchResource())->sortable(),
-                BelongsTo::make(label: 'Muallif', relationName: 'owner', resource: new UserResource()),
-                BelongsTo::make(label: 'Holati', relationName: 'status', resource: new StatusResource())->sortable(),
-                HasMany::make('Rasmlar', 'images', resource: new AdImageResource())->onlyLink(),
+                \MoonShine\Fields\Text::make("title"),
+                \MoonShine\Fields\Text::make("description"),
+                Textarea::make("address"),
+                \MoonShine\Fields\Number::make("rooms")->sortable(),
+                \MoonShine\Fields\Number::make("price")->sortable(),
+                Enum::make("gender")->attach(Gender::class),
+                BelongsTo::make(label: 'branches', resource: new BranchesResource()),
+                BelongsTo::make(label: 'status', resource: new StatusResource()),
+                BelongsTo::make(label: 'users', resource: new UserResource()),
+
+
             ]),
         ];
     }
 
-    protected function modifyCreateButton(ActionButton $button): ActionButton
-    {
-        return $button->setLabel("Qo'shish");
-    }
-
     /**
-     * @param  Ad  $item
+     * @param Ad $item
      *
      * @return array<string, string[]|string>
      * @see https://laravel.com/docs/validation#available-validation-rules
